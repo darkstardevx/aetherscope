@@ -1,0 +1,399 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AetherScope — Packet capture console</title>
+<meta name="description" content="Packet capture and protocol inspection on your own interfaces. Same category as tcpdump/Wireshark.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICAKICA8ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9Imljc3dlZXAiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzRGQzNGNSIgc3RvcC1vcGFjaXR5PSIwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNEZDM0Y1IiBzdG9wLW9wYWNpdHk9IjAuNDUiLz48L3JhZGlhbEdyYWRpZW50PjwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzAzMDMwOCIvPgogIAogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMDkuMjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE1MS4yMDAwMDAwMDAwMDAwMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEiLz4KICAgIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iOTEuODAwMDAwMDAwMDAwMDEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgICA8bGluZSB4MT0iNDY1LjIiIHkxPSIyNTYuMCIgeDI9IjQ1MS44IiB5Mj0iMjU2LjAiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjQ2Mi4xIiB5MT0iMjkyLjMiIHgyPSI0NDguOCIgeTI9IjI5MC4wIiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSI0NTIuNiIgeTE9IjMyNy42IiB4Mj0iNDM5LjkiIHkyPSIzMjMuMCIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iNDM3LjIiIHkxPSIzNjAuNiIgeDI9IjQyNS41IiB5Mj0iMzUzLjkiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjQxNi4zIiB5MT0iMzkwLjUiIHgyPSI0MDYuMCIgeTI9IjM4MS44IiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSIzOTAuNSIgeTE9IjQxNi4zIiB4Mj0iMzgxLjgiIHkyPSI0MDYuMCIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iMzYwLjYiIHkxPSI0MzcuMiIgeDI9IjM1My45IiB5Mj0iNDI1LjUiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjMyNy42IiB5MT0iNDUyLjYiIHgyPSIzMjMuMCIgeTI9IjQzOS45IiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSIyOTIuMyIgeTE9IjQ2Mi4xIiB4Mj0iMjkwLjAiIHkyPSI0NDguOCIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iMjU2LjAiIHkxPSI0NjUuMiIgeDI9IjI1Ni4wIiB5Mj0iNDUxLjgiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjIxOS43IiB5MT0iNDYyLjEiIHgyPSIyMjIuMCIgeTI9IjQ0OC44IiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSIxODQuNCIgeTE9IjQ1Mi42IiB4Mj0iMTg5LjAiIHkyPSI0MzkuOSIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iMTUxLjQiIHkxPSI0MzcuMiIgeDI9IjE1OC4xIiB5Mj0iNDI1LjUiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjEyMS41IiB5MT0iNDE2LjMiIHgyPSIxMzAuMiIgeTI9IjQwNi4wIiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSI5NS43IiB5MT0iMzkwLjUiIHgyPSIxMDYuMCIgeTI9IjM4MS44IiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSI3NC44IiB5MT0iMzYwLjYiIHgyPSI4Ni41IiB5Mj0iMzUzLjkiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjU5LjQiIHkxPSIzMjcuNiIgeDI9IjcyLjEiIHkyPSIzMjMuMCIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iNDkuOSIgeTE9IjI5Mi4zIiB4Mj0iNjMuMiIgeTI9IjI5MC4wIiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSI0Ni44IiB5MT0iMjU2LjAiIHgyPSI2MC4yIiB5Mj0iMjU2LjAiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjQ5LjkiIHkxPSIyMTkuNyIgeDI9IjYzLjIiIHkyPSIyMjIuMCIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iNTkuNCIgeTE9IjE4NC40IiB4Mj0iNzIuMSIgeTI9IjE4OS4wIiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSI3NC44IiB5MT0iMTUxLjQiIHgyPSI4Ni41IiB5Mj0iMTU4LjEiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9Ijk1LjciIHkxPSIxMjEuNSIgeDI9IjEwNi4wIiB5Mj0iMTMwLjIiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjEyMS41IiB5MT0iOTUuNyIgeDI9IjEzMC4yIiB5Mj0iMTA2LjAiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjE1MS40IiB5MT0iNzQuOCIgeDI9IjE1OC4xIiB5Mj0iODYuNSIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iMTg0LjQiIHkxPSI1OS40IiB4Mj0iMTg5LjAiIHkyPSI3Mi4xIiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSIyMTkuNyIgeTE9IjQ5LjkiIHgyPSIyMjIuMCIgeTI9IjYzLjIiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjI1Ni4wIiB5MT0iNDYuOCIgeDI9IjI1Ni4wIiB5Mj0iNjAuMiIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iMjkyLjMiIHkxPSI0OS45IiB4Mj0iMjkwLjAiIHkyPSI2My4yIiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSIzMjcuNiIgeTE9IjU5LjQiIHgyPSIzMjMuMCIgeTI9IjcyLjEiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjM2MC42IiB5MT0iNzQuOCIgeDI9IjM1My45IiB5Mj0iODYuNSIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iMzkwLjUiIHkxPSI5NS43IiB4Mj0iMzgxLjgiIHkyPSIxMDYuMCIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iNDE2LjMiIHkxPSIxMjEuNSIgeDI9IjQwNi4wIiB5Mj0iMTMwLjIiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KPGxpbmUgeDE9IjQzNy4yIiB5MT0iMTUxLjQiIHgyPSI0MjUuNSIgeTI9IjE1OC4xIiBzdHJva2U9IiMyNDJiMzIiIHN0cm9rZS13aWR0aD0iMS42MiIgb3BhY2l0eT0iMC44Ii8+CjxsaW5lIHgxPSI0NTIuNiIgeTE9IjE4NC40IiB4Mj0iNDM5LjkiIHkyPSIxODkuMCIgc3Ryb2tlPSIjMjQyYjMyIiBzdHJva2Utd2lkdGg9IjEuNjIiIG9wYWNpdHk9IjAuOCIvPgo8bGluZSB4MT0iNDYyLjEiIHkxPSIyMTkuNyIgeDI9IjQ0OC44IiB5Mj0iMjIyLjAiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxLjYyIiBvcGFjaXR5PSIwLjgiLz4KICAgIDxwYXRoIGQ9Ik0gMjU2IDI1NiBMIDI1Ni4wIDQ2LjggQSAyMDkuMjUgMjA5LjI1IDAgMCAxIDQ2Mi4xIDI5Mi4zIFoiIGZpbGw9InVybCgjaWNzd2VlcCkiLz4KICAgIDxsaW5lIHgxPSIyNTYiIHkxPSIyNTYiIHgyPSI0NjIuMSIgeTI9IjI5Mi4zIiBzdHJva2U9IiM0RkMzRjUiIHN0cm9rZS13aWR0aD0iMi43Ii8+CiAgICA8bGluZSB4MT0iNDYuNzUiIHkxPSIyNTYiIHgyPSI0NjUuMjUiIHkyPSIyNTYiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgICA8bGluZSB4MT0iMjU2IiB5MT0iNDYuNzUiIHgyPSIyNTYiIHkyPSI0NjUuMjUiIHN0cm9rZT0iIzI0MmIzMiIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgICA8Y2lyY2xlIGN4PSIzMjguNCIgY3k9IjMxNi43IiByPSI1LjQiIGZpbGw9IiNGRkIwMjAiLz48Y2lyY2xlIGN4PSIxMDMuOCIgY3k9IjMxMS40IiByPSI1LjQiIGZpbGw9IiNGRkIwMjAiLz48Y2lyY2xlIGN4PSIyMTIuMSIgY3k9IjEzNS41IiByPSI1LjQiIGZpbGw9IiM0RkMzRjUiLz48Y2lyY2xlIGN4PSIzNTAuNSIgY3k9IjkyLjMiIHI9IjUuNCIgZmlsbD0iI0ZGQjAyMCIvPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSI1LjQiIGZpbGw9IiNGMkY1RjciLz4KICAgIAo8L3N2Zz4=">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --void: #030308;
+    --panel: 11, 13, 16;
+    --grid-line: #242b32;
+    --grid-line2: #1a1f24;
+    --amber: #FFB020;
+    --coldblue: #4FC3F5;
+    --white: #F2F5F7;
+    --muted: #6B7480;
+    --lockred: #FF3B3B;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  ::selection { background: rgba(79,195,245,.25); color: #fff; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(900px 500px at 85% -8%, rgba(79,195,245,.07), transparent 60%),
+      radial-gradient(700px 420px at 10% 100%, rgba(255,176,32,.05), transparent 60%),
+      var(--void);
+    background-attachment: fixed;
+    color: #C7CCD4;
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    font-size: 14.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; }
+  a { color: inherit; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding-inline: 22px; }
+  h1, h2, h3 { font-family: 'Orbitron', sans-serif; color: var(--white); margin: 0; font-weight: 700; text-wrap: balance; }
+  p { margin: 0; }
+  code { font-family: 'Share Tech Mono', monospace; background: rgba(255,255,255,.04); padding: 1px 5px; border-radius: 2px; }
+
+  /* ---------- nav / status bar ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 40;
+    backdrop-filter: blur(12px);
+    background: rgba(3,3,8,.82);
+    border-bottom: 1px solid var(--grid-line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+  .brand svg { width: 24px; height: 24px; }
+  .brand span { font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--white); font-size: 15px; letter-spacing: .04em; }
+  .status-pill { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--muted); letter-spacing: .04em; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--coldblue); box-shadow: 0 0 6px 1px rgba(79,195,245,.7); animation: blink 2.4s infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  .navlinks { display: flex; align-items: center; gap: 20px; }
+  .navlinks a.navlink { font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: .05em; text-transform: uppercase; }
+  .navlinks a.navlink:hover { color: var(--white); }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+    font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em;
+    text-decoration: none; cursor: pointer; border: 1px solid transparent;
+  }
+  .btn-primary { background: rgba(79,195,245,.14); border-color: var(--coldblue); color: #fff; }
+  .btn-primary:hover { background: rgba(79,195,245,.24); }
+  .btn-ghost { background: rgba(255,255,255,.03); border-color: var(--grid-line); color: #C7CCD4; }
+  .btn-ghost:hover { border-color: #3a4450; background: rgba(255,255,255,.06); }
+
+  /* ---------- tag pill ---------- */
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--grid-line);
+    font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase;
+    background: rgba(255,255,255,.02); color: #97A0AC;
+    white-space: nowrap;
+  }
+  .tag.blue { border-color: var(--coldblue); color: #B7E4FA; background: rgba(79,195,245,.08); }
+  .tag.amber { border-color: var(--amber); color: #FFD699; background: rgba(255,176,32,.08); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  /* ---------- scope panel (chrome system: HUD corner ticks, not a window) ---------- */
+  .panel {
+    position: relative;
+    border: 1px solid var(--grid-line);
+    background: linear-gradient(165deg, rgba(11,13,16,.92), rgba(3,3,8,.95));
+  }
+  .panel-corner { position: absolute; width: 10px; height: 10px; border: 1.5px solid #3a4450; }
+  .panel-corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .panel-corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+  .panel-corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+  .panel-corner.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+  .panel-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px; border-bottom: 1px solid var(--grid-line2);
+  }
+  .panel-label { font-size: 10.5px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+  .panel-led { width: 6px; height: 6px; border-radius: 50%; background: var(--coldblue); box-shadow: 0 0 6px 1px rgba(79,195,245,.6); }
+  .panel-led.amber { background: var(--amber); box-shadow: 0 0 6px 1px rgba(255,176,32,.6); }
+  .panel-led.red { background: var(--lockred); box-shadow: 0 0 6px 1px rgba(255,59,59,.6); }
+  .panel-body { padding: 16px; }
+  .panel h3 { font-size: 15px; margin-bottom: 8px; }
+  .panel p { color: #97A0AC; font-size: 13px; line-height: 1.65; margin-bottom: 8px; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel strong { color: var(--white); }
+
+  /* ---------- dashboard grid ---------- */
+  .dash { padding: 28px 0 0; }
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+    grid-template-areas:
+      "id     scope  capture"
+      "id     scope  proteus"
+      "output scope  hardened";
+    gap: 14px;
+  }
+  .a-id { grid-area: id; }
+  .a-scope { grid-area: scope; }
+  .a-capture { grid-area: capture; }
+  .a-proteus { grid-area: proteus; }
+  .a-output { grid-area: output; }
+  .a-hardened { grid-area: hardened; }
+
+  .id-panel .panel-body { display: flex; flex-direction: column; gap: 14px; height: 100%; }
+  .id-panel h1 { font-size: 26px; line-height: 1.2; }
+  .id-panel .desc { font-size: 13px; color: #97A0AC; line-height: 1.65; }
+
+  /* scope panel visual */
+  .scope-visual { display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .scope-visual svg { width: 100%; max-width: 340px; height: auto; }
+  .sweep-arm { transform-origin: 175px 175px; animation: spin 4.5s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sweep-arm { animation: none; } .status-dot { animation: none; } }
+
+  /* keyboard key chip */
+  .kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--grid-line); border-radius: 3px; font-size: 11px; color: var(--white); background: rgba(255,255,255,.03); }
+
+  /* ---------- ticker (live feed) ---------- */
+  .ticker-wrap { margin-top: 14px; }
+  .ticker-body { padding: 0; max-height: 180px; overflow: hidden; position: relative; }
+  .ticker-body::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(transparent, rgba(3,3,8,.95)); pointer-events: none; }
+  .ticker-line { display: flex; gap: 14px; padding: 5px 16px; font-size: 12.5px; border-bottom: 1px solid rgba(36,43,50,.4); }
+  .ticker-line .proto { width: 40px; flex-shrink: 0; }
+  .ticker-line .proto.tcp { color: var(--coldblue); }
+  .ticker-line .proto.udp { color: var(--amber); }
+  .ticker-line .proto.icmp { color: #C084FC; }
+  .ticker-line .data { color: #9AA2AC; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---------- roadmap ---------- */
+  .roadmap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; }
+  .rm-row { display: flex; align-items: center; gap: 9px; font-size: 12.5px; padding: 4px 0; }
+  .rm-box { width: 13px; height: 13px; border: 1.4px solid var(--grid-line); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .rm-row.done .rm-box { background: rgba(79,195,245,.16); border-color: var(--coldblue); }
+  .rm-row.done .rm-box::after { content: "✓"; font-size: 8px; color: var(--coldblue); }
+  .rm-row.todo span { color: var(--muted); }
+
+  /* ---------- install ---------- */
+  .install-grid { padding: 16px 0 0; }
+  .os-tabs { display: flex; gap: 6px; padding: 12px 14px 0; }
+  .os-tab {
+    padding: 6px 14px; border: 1px solid var(--grid-line);
+    font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--muted); background: transparent; cursor: pointer;
+  }
+  .os-tab.active { background: rgba(79,195,245,.14); border-color: var(--coldblue); color: #fff; }
+  .cmd-row {
+    display: flex; align-items: center; gap: 10px; margin: 14px 16px 16px; padding: 11px 8px 11px 14px;
+    background: rgba(0,0,0,.3); border: 1px solid var(--grid-line2);
+  }
+  .cmd-row .prompt { color: var(--amber); font-size: 13px; flex-shrink: 0; }
+  .cmd-row code { flex: 1; font-size: 12.4px; color: #D6DAE0; background: none; padding: 0; overflow-x: auto; white-space: nowrap; }
+  .copy-btn {
+    flex-shrink: 0; width: 30px; height: 30px; border: 1px solid var(--grid-line2);
+    background: rgba(255,255,255,.03); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .copy-btn:hover { border-color: var(--grid-line); color: #fff; }
+  .copy-btn.copied { color: var(--coldblue); border-color: var(--coldblue); }
+  .install-more { text-align: center; margin-top: 14px; }
+  .install-more a { font-size: 11.5px; color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--grid-line); }
+  .install-more a:hover { color: var(--coldblue); border-color: var(--coldblue); }
+  .install-note { font-size: 11.5px; color: #5b6470; padding: 0 16px 14px; }
+
+  /* ---------- footer ---------- */
+  footer { border-top: 1px solid var(--grid-line); padding: 26px 0 40px; margin-top: 28px; }
+  .foot-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .foot-brand { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--muted); }
+  .foot-brand svg { width: 18px; height: 18px; }
+  .foot-links { display: flex; gap: 18px; }
+  .foot-links a { font-size: 11.5px; color: var(--muted); text-decoration: none; letter-spacing: .04em; text-transform: uppercase; }
+  .foot-links a:hover { color: #fff; }
+  .foot-family { font-size: 10px; letter-spacing: .06em; color: #33383f; text-transform: uppercase; }
+
+  @media (max-width: 980px) {
+    .dash-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas: "id" "scope" "capture" "proteus" "output" "hardened";
+    }
+    .roadmap-grid { grid-template-columns: 1fr; }
+    .navlinks .navlink { display: none; }
+  }
+</style>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#242b32" stroke-width="1.5"/><path d="M20 20 L20 3 A17 17 0 0 1 32 8 Z" fill="#4FC3F5" opacity="0.35"/><line x1="20" y1="20" x2="31" y2="23" stroke="#4FC3F5" stroke-width="2"/><circle cx="20" cy="20" r="2.4" fill="#F2F5F7"/></svg>
+      <span>AETHERSCOPE</span>
+    </a>
+    <div class="status-pill"><span class="status-dot"></span>MONITORING · WLP2S0</div>
+    <div class="navlinks">
+      <a class="navlink" href="#proteus">Proteus</a>
+      <a class="navlink" href="#install">Install</a>
+      <a class="navlink btn btn-ghost" style="padding:6px 14px;font-size:11px;" href="https://github.com/darkstardevx/aetherscope" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main class="dash">
+  <div class="wrap">
+    <div class="dash-grid">
+
+      <div class="panel a-id id-panel">
+        <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+        <div class="panel-bar"><span class="panel-label">Identity</span><span class="panel-led"></span></div>
+        <div class="panel-body">
+          <div class="tag-row">
+            <span class="tag">Rust</span>
+            <span class="tag blue">libpcap</span>
+            <span class="tag amber">MIT</span>
+          </div>
+          <h1>Packet capture, on your own interfaces.</h1>
+          <p class="desc">Same category as <code>tcpdump</code>/Wireshark. Not a proxy like WraithFlow — this sits directly on an interface and sees everything crossing it: TCP, UDP, ICMP, ARP, anything, not just traffic you've deliberately routed through a pipeline.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#install">Install</a>
+            <a class="btn btn-ghost" href="https://github.com/darkstardevx/aetherscope" target="_blank" rel="noopener">Source</a>
+          </div>
+          <div class="tag-row">
+            <span class="tag">bpf filters</span>
+            <span class="tag">pcap export</span>
+            <span class="tag">follow tcp stream</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel a-scope">
+        <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+        <div class="panel-bar"><span class="panel-label">Scope — live</span><span class="panel-led amber"></span></div>
+        <div class="scope-visual">
+          <svg viewBox="0 0 350 350">
+            <circle cx="175" cy="175" r="155" fill="none" stroke="#242b32" stroke-width="1"/>
+            <circle cx="175" cy="175" r="112" fill="none" stroke="#242b32" stroke-width="1"/>
+            <circle cx="175" cy="175" r="68" fill="none" stroke="#242b32" stroke-width="1"/>
+            <line x1="20" y1="175" x2="330" y2="175" stroke="#242b32" stroke-width="1"/>
+            <line x1="175" y1="20" x2="175" y2="330" stroke="#242b32" stroke-width="1"/>
+            <g class="sweep-arm">
+              <defs><radialGradient id="liveSweep"><stop offset="0" stop-color="#4FC3F5" stop-opacity="0"/><stop offset="1" stop-color="#4FC3F5" stop-opacity="0.4"/></radialGradient></defs>
+              <path d="M175 175 L175 20 A155 155 0 0 1 265 55 Z" fill="url(#liveSweep)"/>
+              <line x1="175" y1="175" x2="265" y2="55" stroke="#4FC3F5" stroke-width="2"/>
+            </g>
+            <circle cx="245" cy="105" r="4" fill="#FFB020"/>
+            <circle cx="120" cy="235" r="4" fill="#FFB020"/>
+            <circle cx="95" cy="140" r="4" fill="#4FC3F5"/>
+            <circle cx="230" cy="255" r="4" fill="#FFB020"/>
+            <circle cx="175" cy="175" r="4" fill="#F2F5F7"/>
+          </svg>
+        </div>
+        <div class="ticker-wrap panel" style="border-left:none;border-right:none;border-bottom:none;">
+          <div class="panel-bar"><span class="panel-label">Capture feed</span><span class="panel-led"></span></div>
+          <div class="ticker-body">
+            <div class="ticker-line"><span class="proto tcp">TCP</span><span class="data">10.0.0.14:51882 → 140.82.113.3:443 [SYN]</span></div>
+            <div class="ticker-line"><span class="proto tcp">TCP</span><span class="data">140.82.113.3:443 → 10.0.0.14:51882 [SYN,ACK]</span></div>
+            <div class="ticker-line"><span class="proto udp">UDP</span><span class="data">10.0.0.14:52110 → 1.1.1.1:53 len=61</span></div>
+            <div class="ticker-line"><span class="proto icmp">ICMP</span><span class="data">10.0.0.14 → 10.0.0.1 echo request</span></div>
+            <div class="ticker-line"><span class="proto tcp">TCP</span><span class="data">10.0.0.14:51882 → 140.82.113.3:443 [ACK]</span></div>
+            <div class="ticker-line"><span class="proto udp">UDP</span><span class="data">1.1.1.1:53 → 10.0.0.14:52110 len=134</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel a-capture">
+        <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+        <div class="panel-bar"><span class="panel-label">Capture engine</span><span class="panel-led"></span></div>
+        <div class="panel-body">
+          <h3>Real libpcap, real BPF.</h3>
+          <p>The exact same capture engine <code>tcpdump</code>/Wireshark use — via the <code>pcap</code> crate. BPF filter syntax (<code>tcp port 22</code>, <code>udp and not port 53</code>) comes free from libpcap, not reimplemented.</p>
+          <p><code>-w capture.pcap</code> writes every frame to a real Wireshark-compatible file alongside terminal output.</p>
+        </div>
+      </div>
+
+      <div class="panel a-proteus" id="proteus">
+        <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+        <div class="panel-bar"><span class="panel-label">Proteus — TUI</span><span class="panel-led amber"></span></div>
+        <div class="panel-body">
+          <h3>Follow TCP Stream.</h3>
+          <p>The interactive browser AetherScope never had. Press <span class="kbd">s</span> on a selected TCP packet to reconstruct the full conversation, both directions, color-coded — the actual headline feature this was built for.</p>
+          <p><span class="kbd">j/k</span> move · <span class="kbd">/</span> filter · <span class="kbd">w</span> export · <span class="kbd">?</span> help</p>
+        </div>
+      </div>
+
+      <div class="panel a-output">
+        <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+        <div class="panel-bar"><span class="panel-label">Output</span><span class="panel-led"></span></div>
+        <div class="panel-body">
+          <h3>Three formats. One pipeline.</h3>
+          <p><strong>summary</strong> (tcpdump-style, one line), <strong>hexdump</strong>, or <strong>json</strong> — same parsed packet, three renderers. Colors sourced from the shared cybercore CYBERGRID palette, by protocol.</p>
+        </div>
+      </div>
+
+      <div class="panel a-hardened">
+        <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+        <div class="panel-bar"><span class="panel-label">Verified</span><span class="panel-led red"></span></div>
+        <div class="panel-body">
+          <h3>Round-tripped through real tshark.</h3>
+          <p>pcap export/import isn't just verified against itself — Proteus's own exports were checked against real <code>tshark</code> reading them, and vice versa.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel" style="margin-top:14px;">
+      <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+      <div class="panel-bar"><span class="panel-label">Roadmap</span><span class="panel-led"></span></div>
+      <div class="panel-body">
+        <div class="roadmap-grid">
+          <div class="rm-row done"><span class="rm-box"></span><span>Ethernet/IPv4/IPv6/TCP/UDP/ICMP parsing, unit-tested</span></div>
+          <div class="rm-row done"><span class="rm-box"></span><span>BPF filtering via libpcap</span></div>
+          <div class="rm-row done"><span class="rm-box"></span><span>summary/hexdump/json output</span></div>
+          <div class="rm-row done"><span class="rm-box"></span><span>pcap export/import, verified against tshark</span></div>
+          <div class="rm-row done"><span class="rm-box"></span><span>Follow TCP Stream, tshark-verified</span></div>
+          <div class="rm-row todo"><span class="rm-box"></span><span>IPv6 extension header chains</span></div>
+          <div class="rm-row todo"><span class="rm-box"></span><span>Higher-level dissection (HTTP, DNS, TLS)</span></div>
+          <div class="rm-row todo"><span class="rm-box"></span><span>Sequence-aware TCP stream reassembly</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel install-grid" id="install" style="margin-top:14px;">
+      <div class="panel-corner tl"></div><div class="panel-corner tr"></div><div class="panel-corner bl"></div><div class="panel-corner br"></div>
+      <div class="panel-bar"><span class="panel-label">Install</span><span class="panel-led"></span></div>
+      <div class="os-tabs" role="tablist">
+        <button class="os-tab active" data-os="linux" onclick="asSetOs('linux')">Linux</button>
+        <button class="os-tab" data-os="macos" onclick="asSetOs('macos')">macOS</button>
+      </div>
+      <div class="cmd-row">
+        <span class="prompt">&gt;_</span>
+        <code id="as-cmd">curl -fsSL https://raw.githubusercontent.com/darkstardevx/aetherscope/main/install.sh | sh</code>
+        <button class="copy-btn" onclick="asCopy(this)" aria-label="Copy command">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
+      <p class="install-note">Installs both <code>aetherscope</code> and <code>proteus</code>. Needs root or <code>CAP_NET_RAW</code> to open a capture device — <code>--list-interfaces</code> works unprivileged. Note: <code>sudo</code> resets PATH, so a bare <code>sudo aetherscope</code> may say "command not found" even though it's installed — use <code>sudo env "PATH=$PATH" aetherscope ...</code>.</p>
+      <div class="install-more">
+        <a href="https://github.com/darkstardevx/aetherscope#-aetherscope-cli" target="_blank" rel="noopener">More install options &amp; manual builds →</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="foot-brand">
+      <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#242b32" stroke-width="1.5"/><line x1="20" y1="20" x2="31" y2="23" stroke="#4FC3F5" stroke-width="2"/><circle cx="20" cy="20" r="2.4" fill="#F2F5F7"/></svg>
+      <span>AetherScope · MIT licensed</span>
+    </div>
+    <div class="foot-links">
+      <a href="https://github.com/darkstardevx/aetherscope" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/darkstardevx/aetherscope/releases" target="_blank" rel="noopener">Releases</a>
+      <a href="#install">Install</a>
+    </div>
+    <div class="foot-family">Cybercore family</div>
+  </div>
+</footer>
+
+<script>
+  const CMDS = {
+    linux: 'curl -fsSL https://raw.githubusercontent.com/darkstardevx/aetherscope/main/install.sh | sh',
+    macos: 'curl -fsSL https://raw.githubusercontent.com/darkstardevx/aetherscope/main/install.sh | sh'
+  };
+  function asSetOs(os) {
+    document.querySelectorAll('.os-tab').forEach(t => t.classList.toggle('active', t.dataset.os === os));
+    document.getElementById('as-cmd').textContent = CMDS[os];
+  }
+  function asCopy(btn) {
+    const text = document.getElementById('as-cmd').textContent;
+    navigator.clipboard?.writeText(text).then(() => {
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 1400);
+    }).catch(() => {});
+  }
+  try { if (/Mac OS X|Macintosh/.test(navigator.userAgent)) asSetOs('macos'); } catch (e) {}
+</script>
