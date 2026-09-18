@@ -85,7 +85,12 @@ impl Source {
         };
 
         let ts_sec: i64 = raw.header.ts.tv_sec;
-        let ts_usec: i64 = raw.header.ts.tv_usec;
+        // tv_usec is i64 on Linux glibc but i32 on macOS/BSD libc -- .into()
+        // handles both without a platform-specific cfg; it's a genuine
+        // widening conversion on macOS and a no-op on Linux, where clippy
+        // would otherwise (correctly, for that one platform) flag it.
+        #[allow(clippy::useless_conversion)]
+        let ts_usec: i64 = raw.header.ts.tv_usec.into();
         let parsed = packet::parse(raw.data, ts_sec * 1_000_000 + ts_usec);
 
         Ok(Some(CapturedFrame {
