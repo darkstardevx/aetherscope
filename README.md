@@ -17,8 +17,18 @@ curl -fsSL https://raw.githubusercontent.com/darkstardevx/aetherscope/main/insta
 
 Downloads the latest release for your platform (Linux or macOS, x86_64
 or aarch64), verifies its SHA-256 checksum, and installs both
-`aetherscope` and `proteus` to `~/.local/bin`. Or build from source
-with `cargo build --release`.
+`aetherscope` and `proteus` to `~/.local/bin`.
+
+> [!NOTE]
+> Like `tcpdump`/Wireshark, these binaries link against the system's
+> `libpcap` at runtime — it isn't bundled. The prebuilt Linux binaries
+> are built on Ubuntu and need libpcap's legacy `libpcap.so.0.8` name:
+> `sudo apt install libpcap0.8` on Debian/Ubuntu. On distros that only
+> ship the modern `libpcap.so.1` name (Arch, Fedora, etc.), build from
+> source instead (`cargo build --release`) — it links against whatever
+> libpcap you actually have. macOS ships libpcap in the base system, no
+> action needed. `install.sh` detects this and tells you which case
+> you're in.
 
 **Packet capture and protocol inspection on your own interfaces** — the
 same category of tool as `tcpdump`/Wireshark. Not a proxy like
