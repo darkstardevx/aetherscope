@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+
+  <defs><radialGradient id="favsweep"><stop offset="0" stop-color="#4FC3F5" stop-opacity="0"/><stop offset="1" stop-color="#4FC3F5" stop-opacity="0.45"/></radialGradient></defs>
+  <rect width="128" height="128" rx="28" fill="#030308"/>
+
+    <circle cx="64" cy="64" r="52" fill="none" stroke="#242b32" stroke-width="1.5"/>
+    <path d="M 64 64 L 64.0 12.0 A 52 52 0 0 1 115.2 73.0 Z" fill="url(#favsweep)"/>
+    <line x1="64" y1="64" x2="115.22" y2="73.048" stroke="#4FC3F5" stroke-width="3"/>
+    <circle cx="64" cy="64" r="4" fill="#F2F5F7"/>
+
+</svg>

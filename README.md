@@ -1,6 +1,24 @@
+<p align="center">
+  <img src="assets/aetherscope-brand/aetherscope-hero.svg" alt="AetherScope — packet capture and protocol inspection" width="820">
+</p>
+
+[![CI](https://github.com/darkstardevx/aetherscope/actions/workflows/ci.yml/badge.svg)](https://github.com/darkstardevx/aetherscope/actions/workflows/ci.yml)
+[![Release](https://github.com/darkstardevx/aetherscope/actions/workflows/release.yml/badge.svg)](https://github.com/darkstardevx/aetherscope/actions/workflows/release.yml)
+
 # 🔭 AetherScope · 🐙 Proteus
 
 `Rust` · `libpcap` · workspace
+
+## 📦 Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/darkstardevx/aetherscope/main/install.sh | sh
+```
+
+Downloads the latest release for your platform (Linux or macOS, x86_64
+or aarch64), verifies its SHA-256 checksum, and installs both
+`aetherscope` and `proteus` to `~/.local/bin`. Or build from source
+with `cargo build --release`.
 
 **Packet capture and protocol inspection on your own interfaces** — the
 same category of tool as `tcpdump`/Wireshark. Not a proxy like

@@ -1,0 +1,15 @@
+AetherScope Radar Sweep Palette
+
+Void         #030308
+Graphite     #0B0D10
+Grid Line    #242b32
+Grid Line 2  #1a1f24
+Amber        #FFB020   (contacts / capture)
+Cold Blue    #4FC3F5   (sweep / scope / Proteus)
+Lock Red     #FF3B3B   (rare accent — verified/critical)
+White        #F2F5F7
+Muted        #6B7480
+
+Fonts: Orbitron (headings) + Share Tech Mono (data/labels), both
+embedded as base64 woff2 in every text-bearing SVG (badge, hero,
+logo-horizontal, social-card).
