@@ -43,6 +43,15 @@ sudo aetherscope --interface wlp2s0 -w capture.pcap
 Needs root or `CAP_NET_RAW` to actually open a capture device — everything
 else (`--list-interfaces`) works unprivileged.
 
+> [!NOTE]
+> `sudo` resets `PATH` by default (`secure_path` in `/etc/sudoers`),
+> which usually doesn't include `~/.local/bin` — so a bare `sudo
+> aetherscope`/`sudo proteus` can fail with "command not found" even
+> though the binary works fine on your own PATH. If that happens, either
+> use the full path (`sudo /home/raven/.cargo-target/release/proteus ...`)
+> or preserve your PATH for that one call: `sudo env "PATH=$PATH"
+> proteus ...`.
+
 ## 🐙 Proteus (TUI)
 
 The interactive browser AetherScope never had — `wf-tui`-style live
