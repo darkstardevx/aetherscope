@@ -1,12 +1,13 @@
-[package]
-name = "aetherscope"
+[workspace]
+resolver = "2"
+members = ["aetherscope-core", "aetherscope", "proteus"]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
-description = "Packet capture and protocol inspection on your own interfaces"
+authors = ["darkstardevx <darkstardevx@gmail.com>"]
+license = "MIT"
 
-[dependencies]
-pcap = "2"
-clap = { version = "4.5", features = ["derive"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-cybercore = { path = "/home/raven/.sysops/cybercore" }
+[profile.release]
+strip = true
+lto = "thin"

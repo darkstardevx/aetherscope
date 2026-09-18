@@ -16,6 +16,12 @@ pub struct ParsedPacket {
     pub eth: Option<EthHeader>,
     pub ip: Option<IpHeader>,
     pub transport: Option<TransportHeader>,
+    /// Bytes past the transport header — empty if there's no transport
+    /// header at all, or nothing followed it. Needed for stream
+    /// reconstruction (`stream.rs`) and the TUI's detail view; the
+    /// original CLI-only version of this parser never retained this.
+    #[serde(skip)]
+    pub payload: Vec<u8>,
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -36,11 +42,29 @@ pub struct IpHeader {
 #[derive(Debug, Serialize, Clone)]
 #[serde(tag = "kind")]
 pub enum TransportHeader {
-    Tcp { src_port: u16, dst_port: u16, flags: TcpFlags },
-    Udp { src_port: u16, dst_port: u16, length: u16 },
-    Icmp { icmp_type: u8, code: u8 },
-    Icmpv6 { icmp_type: u8, code: u8 },
-    Other { protocol: u8 },
+    Tcp {
+        src_port: u16,
+        dst_port: u16,
+        seq: u32,
+        ack: u32,
+        flags: TcpFlags,
+    },
+    Udp {
+        src_port: u16,
+        dst_port: u16,
+        length: u16,
+    },
+    Icmp {
+        icmp_type: u8,
+        code: u8,
+    },
+    Icmpv6 {
+        icmp_type: u8,
+        code: u8,
+    },
+    Other {
+        protocol: u8,
+    },
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -109,9 +133,15 @@ pub fn parse(bytes: &[u8], timestamp_micros: i64) -> ParsedPacket {
         _ => None,
     });
 
+    let mut payload = Vec::new();
     let transport = ip.as_ref().and_then(|(hdr, ip_header_len)| {
         let transport_start = ip_start + ip_header_len;
-        bytes.get(transport_start..).and_then(|rest| parse_transport(hdr.protocol, rest))
+        let rest = bytes.get(transport_start..)?;
+        let (header, transport_header_len) = parse_transport(hdr.protocol, rest)?;
+        if let Some(after) = rest.get(transport_header_len..) {
+            payload = after.to_vec();
+        }
+        Some(header)
     });
 
     ParsedPacket {
@@ -120,11 +150,15 @@ pub fn parse(bytes: &[u8], timestamp_micros: i64) -> ParsedPacket {
         eth,
         ip: ip.map(|(hdr, _)| hdr),
         transport,
+        payload,
     }
 }
 
 fn mac_str(b: &[u8]) -> String {
-    b.iter().map(|x| format!("{:02x}", x)).collect::<Vec<_>>().join(":")
+    b.iter()
+        .map(|x| format!("{:02x}", x))
+        .collect::<Vec<_>>()
+        .join(":")
 }
 
 fn parse_eth(bytes: &[u8]) -> Option<EthHeader> {
@@ -176,21 +210,57 @@ fn parse_ipv6(bytes: &[u8]) -> Option<(IpHeader, usize)> {
     ))
 }
 
-fn parse_transport(protocol: u8, bytes: &[u8]) -> Option<TransportHeader> {
+/// Returns the header plus its own length in bytes, same pattern as
+/// `parse_ipv4`/`parse_ipv6` — the caller needs this to know where the
+/// payload actually starts. TCP's real header length varies with options
+/// (the "data offset" field, upper 4 bits of byte 12) — fixed-14 was
+/// wrong for any packet carrying TCP options, and silently would have
+/// sliced part of the header into what `stream.rs` treats as payload.
+fn parse_transport(protocol: u8, bytes: &[u8]) -> Option<(TransportHeader, usize)> {
     match protocol {
-        PROTO_TCP if bytes.len() >= 14 => Some(TransportHeader::Tcp {
-            src_port: u16::from_be_bytes([bytes[0], bytes[1]]),
-            dst_port: u16::from_be_bytes([bytes[2], bytes[3]]),
-            flags: TcpFlags::from_byte(bytes[13]),
-        }),
-        PROTO_UDP if bytes.len() >= 8 => Some(TransportHeader::Udp {
-            src_port: u16::from_be_bytes([bytes[0], bytes[1]]),
-            dst_port: u16::from_be_bytes([bytes[2], bytes[3]]),
-            length: u16::from_be_bytes([bytes[4], bytes[5]]),
-        }),
-        PROTO_ICMP if bytes.len() >= 2 => Some(TransportHeader::Icmp { icmp_type: bytes[0], code: bytes[1] }),
-        PROTO_ICMPV6 if bytes.len() >= 2 => Some(TransportHeader::Icmpv6 { icmp_type: bytes[0], code: bytes[1] }),
-        _ => Some(TransportHeader::Other { protocol }),
+        PROTO_TCP if bytes.len() >= 20 => {
+            let data_offset = ((bytes[12] >> 4) as usize) * 4;
+            if bytes.len() < data_offset || data_offset < 20 {
+                return None;
+            }
+            Some((
+                TransportHeader::Tcp {
+                    src_port: u16::from_be_bytes([bytes[0], bytes[1]]),
+                    dst_port: u16::from_be_bytes([bytes[2], bytes[3]]),
+                    seq: u32::from_be_bytes([bytes[4], bytes[5], bytes[6], bytes[7]]),
+                    ack: u32::from_be_bytes([bytes[8], bytes[9], bytes[10], bytes[11]]),
+                    flags: TcpFlags::from_byte(bytes[13]),
+                },
+                data_offset,
+            ))
+        }
+        PROTO_UDP if bytes.len() >= 8 => Some((
+            TransportHeader::Udp {
+                src_port: u16::from_be_bytes([bytes[0], bytes[1]]),
+                dst_port: u16::from_be_bytes([bytes[2], bytes[3]]),
+                length: u16::from_be_bytes([bytes[4], bytes[5]]),
+            },
+            8,
+        )),
+        // ICMP/ICMPv6's fixed header is 8 bytes (type/code/checksum/
+        // rest-of-header) even though only the first 2 are parsed into
+        // fields here — matches the existing scope (type+code only), the
+        // length is just what's needed to correctly slice the payload.
+        PROTO_ICMP if bytes.len() >= 8 => Some((
+            TransportHeader::Icmp {
+                icmp_type: bytes[0],
+                code: bytes[1],
+            },
+            8,
+        )),
+        PROTO_ICMPV6 if bytes.len() >= 8 => Some((
+            TransportHeader::Icmpv6 {
+                icmp_type: bytes[0],
+                code: bytes[1],
+            },
+            8,
+        )),
+        _ => Some((TransportHeader::Other { protocol }, 0)),
     }
 }
 
@@ -206,7 +276,7 @@ mod tests {
         f.extend([0x00, 0x11, 0x22, 0x33, 0x44, 0x55]); // dst mac
         f.extend([0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff]); // src mac
         f.extend([0x08, 0x00]); // ethertype = IPv4
-        // IPv4 header, 20 bytes, no options
+                                // IPv4 header, 20 bytes, no options
         f.extend([0x45, 0x00]); // version/ihl, dscp/ecn
         f.extend([0x00, 0x28]); // total length
         f.extend([0x00, 0x00, 0x40, 0x00]); // id, flags/fragment
@@ -214,7 +284,7 @@ mod tests {
         f.extend([0x00, 0x00]); // checksum (unchecked)
         f.extend([192, 168, 1, 50]); // src ip
         f.extend([198, 51, 100, 7]); // dst ip
-        // TCP header, 20 bytes minimal
+                                     // TCP header, 20 bytes minimal
         f.extend([0x9c, 0x4e]); // src port 40014
         f.extend([0x00, 0x16]); // dst port 22
         f.extend([0, 0, 0, 1]); // seq
@@ -243,15 +313,66 @@ mod tests {
         assert_eq!(ip.ttl_or_hop_limit, 64);
 
         match p.transport.expect("transport header") {
-            TransportHeader::Tcp { src_port, dst_port, flags } => {
+            TransportHeader::Tcp {
+                src_port,
+                dst_port,
+                seq,
+                ack,
+                flags,
+            } => {
                 assert_eq!(src_port, 40014);
                 assert_eq!(dst_port, 22);
+                assert_eq!(seq, 1);
+                assert_eq!(ack, 0);
                 assert!(flags.syn);
                 assert!(!flags.ack);
                 assert_eq!(flags.short(), "S");
             }
             other => panic!("expected Tcp, got {other:?}"),
         }
+        assert!(p.payload.is_empty(), "a bare SYN carries no payload");
+    }
+
+    #[test]
+    fn extracts_payload_past_a_tcp_header_with_options() {
+        // Same frame as above, but with 4 bytes of TCP options (data
+        // offset 6 = 24 bytes, not the minimal 20) followed by real
+        // payload bytes -- the exact case the old fixed-14-byte transport
+        // slicing would have gotten wrong, folding part of the options
+        // (or, for a minimal header, part of the payload) into the wrong
+        // place.
+        let mut f = Vec::new();
+        f.extend([0x00, 0x11, 0x22, 0x33, 0x44, 0x55]); // dst mac
+        f.extend([0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff]); // src mac
+        f.extend([0x08, 0x00]); // ethertype = IPv4
+        f.extend([0x45, 0x00]);
+        f.extend([0x00, 0x00]); // total length (unchecked by the parser)
+        f.extend([0x00, 0x00, 0x40, 0x00]);
+        f.extend([64, 6]);
+        f.extend([0x00, 0x00]);
+        f.extend([192, 168, 1, 50]);
+        f.extend([198, 51, 100, 7]);
+        f.extend([0x9c, 0x4e]);
+        f.extend([0x00, 0x16]);
+        f.extend([0, 0, 0, 100]); // seq
+        f.extend([0, 0, 0, 50]); // ack
+        f.push(0x60); // data offset = 6 -> 24-byte header (4 bytes options)
+        f.push(0x18); // flags = PSH, ACK
+        f.extend([0xff, 0xff]);
+        f.extend([0x00, 0x00]);
+        f.extend([0x00, 0x00]);
+        f.extend([0x01, 0x01, 0x08, 0x0a]); // 4 bytes of TCP options
+        f.extend(b"hello proteus"); // real payload
+
+        let p = parse(&f, 0);
+        match p.transport.expect("transport header") {
+            TransportHeader::Tcp { seq, ack, .. } => {
+                assert_eq!(seq, 100);
+                assert_eq!(ack, 50);
+            }
+            other => panic!("expected Tcp, got {other:?}"),
+        }
+        assert_eq!(p.payload, b"hello proteus");
     }
 
     #[test]
@@ -265,10 +386,40 @@ mod tests {
 
     #[test]
     fn tcp_flags_short_format() {
-        assert_eq!(TcpFlags { syn: true, ..Default::default() }.short(), "S");
-        assert_eq!(TcpFlags { syn: true, ack: true, ..Default::default() }.short(), "S.");
-        assert_eq!(TcpFlags { fin: true, ack: true, ..Default::default() }.short(), "F.");
-        assert_eq!(TcpFlags { ack: true, ..Default::default() }.short(), ".");
+        assert_eq!(
+            TcpFlags {
+                syn: true,
+                ..Default::default()
+            }
+            .short(),
+            "S"
+        );
+        assert_eq!(
+            TcpFlags {
+                syn: true,
+                ack: true,
+                ..Default::default()
+            }
+            .short(),
+            "S."
+        );
+        assert_eq!(
+            TcpFlags {
+                fin: true,
+                ack: true,
+                ..Default::default()
+            }
+            .short(),
+            "F."
+        );
+        assert_eq!(
+            TcpFlags {
+                ack: true,
+                ..Default::default()
+            }
+            .short(),
+            "."
+        );
         assert_eq!(TcpFlags::default().short(), ".");
     }
 }

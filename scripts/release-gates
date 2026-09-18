@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# Quality gate for the aetherscope workspace (aetherscope-core, aetherscope,
+# proteus). Scaled down like every other tool this session — no publish
+# step, no MSRV matrix, no cargo-deny (no supply-chain/publish concerns
+# established for this workspace yet, unlike wraithflow's own gate script).
+
+mode="${1:-full}"
+
+print_rule() {
+    printf '%*s\n' 72 '' | tr ' ' '='
+}
+
+run_gate() {
+    local name="$1"
+    shift
+
+    echo
+    print_rule
+    echo " GATE: $name"
+    print_rule
+    echo
+
+    "$@"
+    local status=$?
+
+    if [[ $status -ne 0 ]]; then
+        echo
+        echo "FAILED: $name"
+        echo "Exit status: $status"
+        exit "$status"
+    fi
+
+    echo
+    echo "PASS: $name"
+}
+
+require_repo_root() {
+    if [[ ! -f Cargo.toml ]]; then
+        echo "error: run this script from the aetherscope workspace root" >&2
+        exit 1
+    fi
+    if ! grep -q 'aetherscope-core' Cargo.toml; then
+        echo "error: this does not appear to be the aetherscope workspace" >&2
+        exit 1
+    fi
+}
+
+run_quick_gates() {
+    run_gate "Unstaged whitespace" git diff --check
+    run_gate "Staged whitespace" git diff --cached --check
+    run_gate "Formatting" cargo fmt --all -- --check
+    run_gate "Check" cargo check --workspace --all-targets
+    run_gate "Clippy" cargo clippy --workspace --all-targets -- -D warnings
+    run_gate "Strict rustdoc (aetherscope-core public API)" env RUSTDOCFLAGS="-D warnings" cargo doc -p aetherscope-core --no-deps
+}
+
+run_full_gates() {
+    run_quick_gates
+    run_gate "Tests" cargo test --workspace --all-targets
+}
+
+require_repo_root
+
+echo
+print_rule
+echo " AETHERSCOPE WORKSPACE RELEASE GATES"
+print_rule
+echo
+echo "Mode       : $mode"
+echo "Repository : $(pwd)"
+echo "Revision   : $(git rev-parse --short HEAD 2>/dev/null || echo '(no commits yet)')"
+echo "Branch     : $(git branch --show-current 2>/dev/null || echo '(none)')"
+
+case "$mode" in
+    quick) run_quick_gates ;;
+    full) run_full_gates ;;
+    *)
+        echo
+        echo "Usage:"
+        echo "  ./scripts/release-gates quick"
+        echo "  ./scripts/release-gates full"
+        exit 2
+        ;;
+esac
+
+echo
+print_rule
+echo " ALL REQUESTED AETHERSCOPE GATES GREEN"
+print_rule
+echo

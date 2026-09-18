@@ -1,0 +1,14 @@
+[package]
+name = "aetherscope-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow = "1.0.104"
+libc = "0.2"
+pcap = "2.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+cybercore = { path = "/home/raven/.sysops/cybercore" }

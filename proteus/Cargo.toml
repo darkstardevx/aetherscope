@@ -1,0 +1,23 @@
+[package]
+name = "proteus"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Wireshark-style TUI packet analyzer — live capture, Follow TCP Stream, pcap export/import"
+
+[dependencies]
+aetherscope-core = { path = "../aetherscope-core" }
+anyhow = "1.0.104"
+clap = { version = "4.5", features = ["derive"] }
+crossterm = "0.29.0"
+cybercore = { path = "/home/raven/.sysops/cybercore" }
+pcap = "2.5"
+ratatui = "0.30.2"
+
+[dev-dependencies]
+libc = "0.2"
+
+[[bin]]
+name = "proteus"
+path = "src/main.rs"
